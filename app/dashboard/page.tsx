@@ -1,11 +1,17 @@
-import CategoryList from '@/components/CategoryList';
 import Posts from '@/components/Posts';
 import { postData } from '@/data';
+import Link from 'next/link';
+import React from 'react';
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
 
-export default function Home() {
+const Dashboard = async () => {
+  const session = await auth();
+
+  if (!session) redirect('/sign-in');
   return (
-    <>
-      <CategoryList />
+    <section>
+      <h1>My Posts</h1>
       {postData && postData.length > 0 ? (
         postData.map((post) => (
           <Posts
@@ -22,8 +28,16 @@ export default function Home() {
           />
         ))
       ) : (
-        <h2 className='py-6'>No post</h2>
+        <div className='py-6'>
+          <h2>No post created yet</h2>
+          {''}
+          <Link href={`/create-post`} className='underline'>
+            Create New
+          </Link>
+        </div>
       )}
-    </>
+    </section>
   );
-}
+};
+
+export default Dashboard;
